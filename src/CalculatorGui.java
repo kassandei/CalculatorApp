@@ -65,7 +65,6 @@ public class CalculatorGui extends JFrame implements ActionListener {
         buttonPanel = new JPanel(new GridLayout(4, 4, 10, 10)); // 4x4 grid layout with gaps
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add margin
         buttonPanel.setBackground(BACKGROUND_COLOR); // Set background color
-
         // Create buttons and add them to the panel
         buttons = createButtons();
         for (JButton button : buttons) {
@@ -81,6 +80,7 @@ public class CalculatorGui extends JFrame implements ActionListener {
         JButton[] buttons = new JButton[BUTTON_LABELS.length];
         for (int i = 0; i < BUTTON_LABELS.length; i++) {
             buttons[i] = new JButton(BUTTON_LABELS[i]);
+            buttons[i].setOpaque(true); // Set opaque property to true
             buttons[i].setHorizontalAlignment(SwingConstants.CENTER); // Center align text
             buttons[i].setMargin(BUTTON_MARGIN); // Add margin
             buttons[i].setFont(BUTTON_FONT); // Set font
@@ -99,15 +99,81 @@ public class CalculatorGui extends JFrame implements ActionListener {
         return buttons;
     }
 
+    double memory = 0;
+    boolean memoryNull = true;
+    double result = 0;
+    String operatore;
+    boolean isExecuted = false;
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String actionCommand = e.getActionCommand();
+        if (actionCommand.matches("[0-9]")) {
+            if(isExecuted) inputField.setText("");
+            isExecuted = false;
+            inputField.setText(inputField.getText() + actionCommand);
+        } else if (actionCommand.matches("[.]")) {
+            if(!inputField.getText().contains(".")) {
+                if(isExecuted) inputField.setText("");
+                isExecuted = false;
+                inputField.setText(inputField.getText() + actionCommand);
+            }
+        } else if (!(actionCommand.equals("="))) {
 
-        if (actionCommand.equals("=")) {
+            if (!inputField.getText().equals("")) {
+                isExecuted = false;
+                result = Double.parseDouble(inputField.getText());
+                if (!memoryNull) {
+                    calculateResult(operatore);
+                    inputField.setText(String.valueOf(memory));
+                    isExecuted = true;
+                } else {
+                    memoryNull = false;
+                    memory = result;
+                    inputField.setText("");
+                }
+
+
+                operatore = actionCommand;
+
+            }
+        }
+        else {
+            memoryNull = true;
+            if(!isExecuted) {
+                result = Double.parseDouble(inputField.getText());
+                calculateResult(operatore);
+                isExecuted = true;
+                inputField.setText(String.valueOf(memory));
+                memory = 0;
+                operatore = "vuoto";
+            } else {
+                inputField.setText("");
+            }
         }
     }
 
+    public void calculateResult(String operatore) {
+        if(!operatore.equals("vuoto")) {
+            switch (operatore) {
+                case "+":
+                    memory += result;
+                    break;
+                case "-":
+                    memory -= result;
+                    break;
+                case "x":
+                    memory *= result;
+                    break;
+                case "/":
+                    if (result == 0) {
+                        inputField.setText("Error!");
 
-
-
+                    } else {
+                        memory /= result;
+                    }
+                    break;
+            }
+        }
+    }
 }
