@@ -10,7 +10,11 @@ public class CalculatorGui extends JFrame implements ActionListener {
     private JPanel buttonPanel;
 
     // Variables for calculator functionality
-
+    private double memory = 0;
+    private boolean memoryNull = true;
+    private double result = 0;
+    private String operatore;
+    private boolean isExecuted = false;
 
     // Array of button labels
     private static final String[] BUTTON_LABELS = {"7", "8", "9", "x", "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "/", "="};
@@ -32,6 +36,9 @@ public class CalculatorGui extends JFrame implements ActionListener {
         setLocationRelativeTo(null);
         setResizable(false);
         setLayout(new BorderLayout());
+        Image icon = Toolkit.getDefaultToolkit().getImage("src/assets/icon.png");
+        Taskbar.getTaskbar().setIconImage(icon);
+        setIconImage(icon);
         addGuiComponents(); // Add GUI components
     }
 
@@ -98,12 +105,6 @@ public class CalculatorGui extends JFrame implements ActionListener {
 
         return buttons;
     }
-
-    double memory = 0;
-    boolean memoryNull = true;
-    double result = 0;
-    String operatore;
-    boolean isExecuted = false;
 
     @Override
     public void actionPerformed(ActionEvent e) {
