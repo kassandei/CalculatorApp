@@ -120,7 +120,6 @@ public class CalculatorGui extends JFrame implements ActionListener {
                 inputField.setText(inputField.getText() + actionCommand);
             }
         } else if (!(actionCommand.equals("="))) {
-
             if (!inputField.getText().equals("")) {
                 isExecuted = false;
                 result = Double.parseDouble(inputField.getText());
@@ -133,10 +132,7 @@ public class CalculatorGui extends JFrame implements ActionListener {
                     memory = result;
                     inputField.setText("");
                 }
-
-
                 operatore = actionCommand;
-
             }
         }
         else {
